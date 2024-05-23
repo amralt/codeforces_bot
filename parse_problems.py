@@ -5,7 +5,7 @@ from db import db
 
 PROBLEMS_REQUEST = "https://codeforces.com/api/problemset.problems?tags="
 
-problems_set = requests.get(f"{PROBLEMS_REQUEST}{IMPLEMENTATION}")
+problems_set = requests.get(f"{PROBLEMS_REQUEST}")
 
 # TODO: ужасный преужасный костыль. Нужен чтобы упростить структуру бд, но мне нужно будет сделать поиск контеста по части сроки (% вроде бы)... 
 def createId(id, index):
