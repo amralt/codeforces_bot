@@ -1,6 +1,5 @@
 import requests
 
-from tag_consts import IMPLEMENTATION
 from db import db
 
 PROBLEMS_REQUEST = "https://codeforces.com/api/problemset.problems?tags="
@@ -12,8 +11,8 @@ def createId(id, index):
     return f"{id}{index}"
 
 # для записи в таблицу нужно к id контеста добавлять код индекса задачи.
-
 # print(createId(345, "A"))
+
 for problem in problems_set.json()["result"]["problems"]:
     id = str(problem.get("contestId"))+problem.get("index")
     index = problem.get("index")
@@ -26,6 +25,14 @@ for problem in problems_set.json()["result"]["problems"]:
         db.addProblem(id, index, name, type, points, rating, tags)
     except:
         pass
+
+for statistic in problems_set.json()["result"]["problemStatistics"]:
+    contestId = str(statistic["contestId"])
+    index = statistic["index"]
+    solvedCount = statistic["solvedCount"]
+
+    db.addStatisticToProblem(contestId+index, solvedCount)
+    # print(statistic)  
 
 db.printAll()
 db.testDB()

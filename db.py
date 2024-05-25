@@ -64,7 +64,7 @@ class ProblemsDataBase():
     def get_problems_by_rating(self, rating: int):
         cursor = self.cursor
         cursor.execute("SELECT * FROM Problems WHERE rating=?", (rating,))
-        rows = cursor.execute()
+        rows = cursor.fetchall()
         return rows
     
     def get_problem_by_tag_rating(self, tag:str ,rating:int):
@@ -110,8 +110,8 @@ class ProblemsDataBase():
         # print(self.get_all_contest_problems("53C"))
 
         # self.addStatisticToProblem(69, 10000)
-        # print(self.get_problems_by_tag(idTags.get("bitmasks")))
-        print(self.get_problems_by_rating(2000))
+        print(self.get_one_problem_by_tag(idTags.get("bitmasks")))
+        # print(self.get_problems_by_rating(2000))
 
         
 
@@ -138,3 +138,4 @@ class ProblemsDataBase():
         # TODO: напиши запросы по teg, problemId, points, rating
 
 db = ProblemsDataBase()
+# db.testDB()
