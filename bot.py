@@ -2,11 +2,11 @@ import telebot
 
 from tag_consts import *
 from bot_token import BOT_TOKEN
-from db import db
+from db import ProblemsDataBase
 
 
 bot=telebot.TeleBot(BOT_TOKEN)
-
+db = ProblemsDataBase()
 
 
 @bot.message_handler(commands=['start'])
@@ -22,9 +22,9 @@ def start_message(message):
 def query_handler(call):
     if call.data == IMPLEMENTATION:
         problem = db.get_one_problem_by_tag(idTags.get(IMPLEMENTATION))
-        bot.answer_callback_query(callback_query_id=call.id, text=problem)
+        bot.answer_callback_query(callback_query_id=call.id, text=problem, show_alert=False)
     elif call.data == MATH:
-        problem = db.get_one_problem_by_tag(idTags.get(MATH))
+        problem = db.get_one_problem_by_tag(2)
         bot.answer_callback_query(callback_query_id=call.id, text=problem)
   
 bot.infinity_polling()

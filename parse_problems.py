@@ -1,10 +1,11 @@
 import requests
 
 from db import db
+from tag_consts import MATH
 
 PROBLEMS_REQUEST = "https://codeforces.com/api/problemset.problems?tags="
 
-problems_set = requests.get(f"{PROBLEMS_REQUEST}")
+problems_set = requests.get(f"{PROBLEMS_REQUEST}{MATH}")
 
 # TODO: ужасный преужасный костыль. Нужен чтобы упростить структуру бд, но мне нужно будет сделать поиск контеста по части сроки (% вроде бы)... 
 def createId(id, index):
@@ -21,10 +22,11 @@ for problem in problems_set.json()["result"]["problems"]:
     points = problem.get("points")
     rating = problem.get("rating")
     tags = problem.get("tags")
-    try:
-        db.addProblem(id, index, name, type, points, rating, tags)
-    except:
-        pass
+    # print(problem)
+    # try:
+    db.addProblem(id, index, name, type, points, rating, tags)
+    # except:
+    #     pass
 
 for statistic in problems_set.json()["result"]["problemStatistics"]:
     contestId = str(statistic["contestId"])
@@ -34,5 +36,5 @@ for statistic in problems_set.json()["result"]["problemStatistics"]:
     db.addStatisticToProblem(contestId+index, solvedCount)
     # print(statistic)  
 
-db.printAll()
+# db.printAll()
 db.testDB()

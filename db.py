@@ -1,6 +1,7 @@
 import sqlite3
 
 from tag_consts import tagsId, idTags, IMPLEMENTATION, MATH
+from model.problem import Problem
 
 class ProblemsDataBase():
 
@@ -36,7 +37,7 @@ class ProblemsDataBase():
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS Problems_Tags (
         tagId INTEGER NOT NULL,
-        problemId INTEGER NOT NULL,
+        problemId TEXT NOT NULL,
         FOREIGN KEY (tagId) REFERENCES Tags(tagId),
         FOREIGN KEY (problemId) REFERENCES Problems(problemId),
         PRIMARY KEY (tagId, problemId)
@@ -56,10 +57,13 @@ class ProblemsDataBase():
         return rows
     
     def get_one_problem_by_tag(self, tag_id):
-        cursor = self.cursor
+        cursor = sqlite3.connect('problems.db').cursor()
         cursor.execute("SELECT * FROM Problems p JOIN Problems_Tags pt ON p.problemId = pt.problemId WHERE pt.tagId =?", (tag_id,))
         row = cursor.fetchone()
-        return row
+        if row == None:
+            return "Я не смог найти задачу("
+        # print(Problem.from_db_row(row).name + " - name") 
+        return Problem.from_db_row(row)
 
     def get_problems_by_rating(self, rating: int):
         cursor = self.cursor
@@ -79,6 +83,11 @@ class ProblemsDataBase():
         row = cursor.fetchone()
         return row
 
+    def get_random_problem(self):
+        cursor = self.cursor
+        cursor.execute("SELECT * FROM Problems ORDER BY RANDOM() LIMIT 1")
+        row = cursor.fetchone()
+        return row
 
     def get_all_contest_problems(self, problem_id: str):
         cursor = self.cursor
@@ -110,7 +119,7 @@ class ProblemsDataBase():
         # print(self.get_all_contest_problems("53C"))
 
         # self.addStatisticToProblem(69, 10000)
-        print(self.get_one_problem_by_tag(idTags.get("bitmasks")))
+        print(self.get_one_problem_by_tag(idTags.get("math")))
         # print(self.get_problems_by_rating(2000))
 
         
@@ -118,10 +127,14 @@ class ProblemsDataBase():
     # TODO: обернуть в объект
     def addProblem(self, problemId, problem_index, name, problem_type, points, rating, tags: list):
         cursor = self.cursor
-
-        cursor.execute(f"INSERT INTO Problems (problemId, problem_index, name, type, points, rating) VALUES ('{problemId}', '{problem_index}', '{name}', '{problem_type}', {points}, {rating})")
-        for tag in tags:
-            cursor.execute(F"INSERT INTO Problems_Tags (tagId, problemId) VALUES ({idTags.get(tag)}, {problemId})")
+        try:
+            cursor.execute(f"INSERT INTO Problems (problemId, problem_index, name, type, points, rating) VALUES ('{problemId}', '{problem_index}', '{name}', '{problem_type}', {points}, {rating})")
+        except:
+            pass
+        print(tags)
+        for tag in idTags.keys():
+            if tag in tags:
+                cursor.execute(F"INSERT INTO Problems_Tags (tagId, problemId) VALUES ({idTags.get(tag)}, '{problemId}')")
 
     
     def addStatisticToProblem(self, tag, solved_count):
@@ -137,5 +150,5 @@ class ProblemsDataBase():
 
         # TODO: напиши запросы по teg, problemId, points, rating
 
-db = ProblemsDataBase()
+# db = ProblemsDataBase()
 # db.testDB()
