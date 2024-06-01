@@ -1,5 +1,8 @@
 venv/
 
-__pycashe__
+__pycashe__/
 
 problems.sqlite
+
+.idea/ 
+
