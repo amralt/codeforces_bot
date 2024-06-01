@@ -2,4 +2,4 @@ venv/
 
 __pycashe__
 
-problems.db
+problems.sqlite

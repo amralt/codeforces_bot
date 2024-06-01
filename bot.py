@@ -26,7 +26,7 @@ def query_handler(call: types.CallbackQuery):
 
     if call.data in idTags.keys():
         problem = db.get_one_problem_by_tag(idTags.get(call.data))
-        bot.send_message(chat_id=chatId, text=problem)
+        bot.send_message(chat_id=chatId, text=problem, parse_mode='Markdown')
         bot.answer_callback_query(call.id)
    
 bot.infinity_polling()
