@@ -1,1 +1,1 @@
-BOT_TOKEN = "6250744722:AAHpPDqy93oe9W0UmLPOezr_Mb8tsVHPhsE"
+BOT_TOKEN = "INSERT_TOKEN" # TODO: Пересоздай токен в BotFather
